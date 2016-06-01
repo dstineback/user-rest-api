@@ -1,10 +1,10 @@
 'use strict';
 
-const app = require('express');
+const app = require('express')();
 const mongoose = require('mongoose');
 const authRouter = require('./route/router');
 
-mongoose.connect('mongodb://localhost/auth_db');
+mongoose.connect('mongodb://localhost/dev_db');
 
 app.use('/', authRouter);
 

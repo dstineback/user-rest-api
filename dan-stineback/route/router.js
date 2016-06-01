@@ -1,12 +1,12 @@
 'use strict';
 const express = require('express');
 const bodyParser = require('body-parser').json();
-const User = require('../modle/user');
+const User = require('../model/user');
 const basicHTTP = require('../lib/basic-http');
 
 const router = module.exports = exports = express.Router();
 
-router.post('signup', bodyParser, (req, res, next)=> {
+router.post('/signup', bodyParser, (req, res, next)=> {
   let newUser = new User(req.body);
   let hashedPassword = newUser.hashedPassword();
   newUser.password = hashedPassword;

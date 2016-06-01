@@ -2,10 +2,12 @@
 
 module.exports = function(req, res, next) {
   let basicAuth = req.headers.authorization;
-  let authString = basicAuth.split(' ');
+  console.log(basicAuth);
+  let authString = basicAuth.split(' ').pop();
   let authBuff = new Buffer(authString, 'base64');
   let asciiAuth = authBuff.toString();
   let authArray = asciiAuth.split(':');
+  console.log(authArray);
   authBuff.fill(0);
 
   req.auth = {
