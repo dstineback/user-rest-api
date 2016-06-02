@@ -23,41 +23,41 @@ describe('unit tests for auth', () => {
   });
 });
 
-// describe('signin tests', () => {
-//
-//   after((done)=> {
-//     process.env.MONGOLAB_URI = dbPort;
-//     mongoose.connection.db.dropDatabase(() => {
-//       done();
-//     });
-//   });
-//
-//   it('should sign up a new user', (done) => {
-//     request('localhost:3000')
-//     .post('/signup')
-//     .send({username:'test', password:'test'})
-//     .end((err, res) => {
-//       expect(err).to.eql(null);
-//       expect(res).to.have.status(200);
-//       expect(res.body).to.eql({token: 'does not need a token'});
-//       done();
-//     });
-//   });
-//
-//   it('should sign in a user with a token', (done) => {
-//     request('localhost:3000')
-//     .get('/signin')
-//     .auth('test', 'test')
-//     .end((err, res) => {
-//       expect(err).to.eql(null);
-//       expect(res).to.have.status(200);
-//       expect(res.body).to.eql({token: err.message});
-//       done();
-//     });
-//   });
-// });
+describe('signin tests', () => {
 
-describe('catch all test', () => {
+  after((done)=> {
+    process.env.MONGOLAB_URI = dbPort;
+    mongoose.connection.db.dropDatabase(() => {
+      done();
+    });
+  });
+
+  it('should sign up a new user', (done) => {
+    request('localhost:3000')
+    .post('/signup')
+    .send({username:'test', password:'test'})
+    .end((err, res) => {
+      expect(err).to.eql(null);
+      expect(res).to.have.status(200);
+      expect(res.body).to.eql({token: req.headers.token});
+      done();
+    });
+  });
+
+  it('should sign in a user with a token', (done) => {
+    request('localhost:3000')
+    .get('/signin')
+    .auth('test', 'test')
+    .end((err, res) => {
+      expect(err).to.eql(null);
+      expect(res).to.have.status(200);
+      expect(res.body).to.eql({token: 'token'});
+      done();
+    });
+  });
+});
+
+describe('catch error test', () => {
 
   it('should give an error for unsupported routes', (done) => {
     request('localhost:3000')
