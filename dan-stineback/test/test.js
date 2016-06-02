@@ -1,84 +1,72 @@
-// 'use strict';
+'use strict';
+
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+chai.use(chaiHttp);
+const expect = chai.expect;
+const request = require('chai').request;
+const mongoose = require('mongoose');
+const basic = require('../lib/basic-http');
+const dbPort = process.env.MONGOLAB_URI;
+
+process.env.MONGOLAB_URI = 'mongodb://localhost/test_db';
+require('../server');
+
+describe('unit tests for auth', () => {
+  it('should auth a user', () => {
+    let baseString = new Buffer('vic:password').toString('base64');
+    let authString = 'Basic ' + baseString;
+    let req = {headers:{authorization: authString}};
+    basic(req, {}, () => {
+      expect(req.auth).to.eql({username: 'vic', password: 'password'});
+    });
+  });
+});
+
+// describe('signin tests', () => {
 //
-// const chai = require('chai');
-// const chaiHTTP = require('chai-http');
-// const user = require('../model/user');
-// const basic = require('../lib/basic-http');
-//
-//
-// const mongoose = require('mongoose');
-// chai.use(chaiHTTP);
-//
-// const expect = chai.expect;
-// const request = chai.request;
-// const dbPort = process.env.MONGOLAB_URI;
-//
-// process.env.MONGOLAB_URI = 'mongodb://localhost/test_db';
-// require('../server');
-//
-//
-// describe(' test', () => {
 //   after((done)=> {
 //     process.env.MONGOLAB_URI = dbPort;
-//     mongoose.connection.db.dropDatabase(()=>{
+//     mongoose.connection.db.dropDatabase(() => {
 //       done();
 //     });
 //   });
-//   it('should sign in', (done) => {
+//
+//   it('should sign up a new user', (done) => {
 //     request('localhost:3000')
-//       .get('/signin')
-//       .end((err, res)=>{
-//         expect(err).to.eql(null);
-//         expect(req.auth).to.eql(0);
-//         done();
-//       });
+//     .post('/signup')
+//     .send({username:'test', password:'test'})
+//     .end((err, res) => {
+//       expect(err).to.eql(null);
+//       expect(res).to.have.status(200);
+//       expect(res.body).to.eql({token: 'does not need a token'});
+//       done();
+//     });
 //   });
-//   it('should post a user', (done) => {
-//     let vic = {name: 'vic', password: 'vic'};
+//
+//   it('should sign in a user with a token', (done) => {
 //     request('localhost:3000')
-//       .post('/signup')
-//       .send(vic)
-//       .end((err, res)=>{
-//         expect(err).to.eql(null);
-//         expect(res).to.have.status(200);
-//         expect(req.body).to.not.eql(0);
-//         done();
-//       });
+//     .get('/signin')
+//     .auth('test', 'test')
+//     .end((err, res) => {
+//       expect(err).to.eql(null);
+//       expect(res).to.have.status(200);
+//       expect(res.body).to.eql({token: err.message});
+//       done();
+//     });
 //   });
 // });
-//
-//
-// //   describe('test that need data', ()=> {
-// //     let testCat;
-// //     beforeEach((done)=> {
-// //       let newCat = new Cat({name: 'test', size: 'large'});
-// //       newCat.save((err, Cat)=> {
-// //         testCat = Cat;
-// //         done();
-// //       });
-// //     });
-// //     it('should return a updated cats', (done) => {
-// //       testCat.name = 'updated';
-// //       request('localhost:3000')
-// //         .put('/cats/')
-// //         .send(testCat)
-// //         .end((err,res)=>{
-// //           expect(err).to.eql(null);
-// //           expect(res).to.have.status(200);
-// //           expect(res.body.message).to.eql('successfully updated');
-// //           done();
-// //         });
-// //     });
-// //     it('should delete a cat', (done)=>{
-// //       request('localhost:3000')
-// //       .delete('/cats/' + testCat._id)
-// //       .end((err, res)=>{
-// //         expect(err).to.eql(null);
-// //         expect(res).to.have.status(200);
-// //         expect(res.body.message).to.eql('successfully deleted');
-// //         done();
-// //       });
-// //     });
-// //   });
-// // });
-// //
+
+describe('catch all test', () => {
+
+  it('should give an error for unsupported routes', (done) => {
+    request('localhost:3000')
+    .get('/*')
+    .end((err, res) => {
+      expect(err).to.not.eql(null);
+      expect(res).to.have.status(404);
+      expect(res.body).to.eql({message: 'not found'});
+      done();
+    });
+  });
+});
