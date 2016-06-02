@@ -5,15 +5,15 @@ const User = require('../model/user');
 const secret = process.env.SECRET || 'changeme';
 
 module.exports = function(req, res, next) {
-  let token = req.headers.token || req.headers.token;
+  let token = req.body.token || req.headers.token;
   let tokenErr = new Error('Authorization Failure');
   let decodedToken;
 
   if (!token) return next(tokenErr);
 
-  try{
+  try {
     decodedToken = jwt.verify(token, secret);
-  } catch(e){
+  } catch(e) {
     return next(tokenErr);
   }
 
