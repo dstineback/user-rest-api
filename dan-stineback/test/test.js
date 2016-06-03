@@ -7,8 +7,6 @@ const expect = chai.expect;
 const request = require('chai').request;
 const mongoose = require('mongoose');
 const basic = require('../lib/basic-http');
-const user = require('../model/user');
-const jwt = require('../lib/jwt_auth');
 const dbPort = process.env.MONGOLAB_URI;
 
 process.env.MONGOLAB_URI = 'mongodb://localhost/test_db';

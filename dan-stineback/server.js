@@ -1,9 +1,6 @@
 'use strict';
 const app = require('express')();
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser').json();
-
-const jwtAuth = require('./lib/jwt_auth');
 const authRouter = require('./route/router');
 
 mongoose.connect('mongodb://localhost/dev_db');

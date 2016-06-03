@@ -7,8 +7,9 @@
     "test": "test"
   },
   "scripts": {
-    "start": "node server.js",
-    "test": "\"./node_modules/mocha/bin/mocha\"}"
+    "start": "node index.js",
+    "test": "./node_modules/mocha/bin/mocha",
+    "lint": "./node_modules/eslint/bin/eslint.js *"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
   "dependencies": {
     "bcrypt": "^0.8.6",
     "body-parser": "^1.15.1",
+    "eslint": "^2.11.1",
     "express": "^4.13.4",
     "jsonwebtoken": "^7.0.0",
     "mongoose": "^4.4.19"
