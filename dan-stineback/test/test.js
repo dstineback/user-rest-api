@@ -7,6 +7,8 @@ const expect = chai.expect;
 const request = require('chai').request;
 const mongoose = require('mongoose');
 const basic = require('../lib/basic-http');
+const user = require('../model/user');
+const jwt = require('../lib/jwt_auth');
 const dbPort = process.env.MONGOLAB_URI;
 
 process.env.MONGOLAB_URI = 'mongodb://localhost/test_db';
@@ -24,41 +26,26 @@ describe('unit tests for auth', () => {
 });
 
 describe('signin tests', () => {
-
   after((done)=> {
-    process.env.MONGOLAB_URI = dbPort;
+    process.env.MONGODB_URI = dbPort;
     mongoose.connection.db.dropDatabase(() => {
       done();
     });
   });
 
-  it('should sign up a new user', (done) => {
+  it('should have a token', (done) => {
     request('localhost:3000')
     .post('/signup')
-    .send({username:'test', password:'test'})
-    .end((err, res) => {
+    .send({username:'vic', password:'vic'})
+    .end((err,res) => {
       expect(err).to.eql(null);
-      expect(res).to.have.status(200);
-      expect(res.body).to.eql({token: req.headers.token});
-      done();
-    });
-  });
-
-  it('should sign in a user with a token', (done) => {
-    request('localhost:3000')
-    .get('/signin')
-    .auth('test', 'test')
-    .end((err, res) => {
-      expect(err).to.eql(null);
-      expect(res).to.have.status(200);
-      expect(res.body).to.eql({token: 'token'});
+      expect(res.body).to.have.property('token');
       done();
     });
   });
 });
 
 describe('catch error test', () => {
-
   it('should give an error for unsupported routes', (done) => {
     request('localhost:3000')
     .get('/*')
